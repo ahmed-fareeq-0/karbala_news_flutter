@@ -1,69 +1,49 @@
-import 'package:application_sus/config/data.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class NewsrScreen extends StatelessWidget {
+import 'package:application_sus/model.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+
+class NewsScreen extends StatefulWidget {
+  const NewsScreen({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: NewsData.newsList.length,
-      itemBuilder: (context, index) {
-        return NewsItem(
-          title: NewsData.newsList[index]['title'] ?? '',
-          description: NewsData.newsList[index]['description'] ?? '',
-          imagePath: NewsData.newsList[index]['imagePath'] ?? '',
-        );
-      },
-    );
-  }
+  State<NewsScreen> createState() => _NewsScreenState();
 }
 
-class NewsItem extends StatelessWidget {
-  final String title;
-  final String description;
-  final String imagePath;
+class _NewsScreenState extends State<NewsScreen> {
+  Future<News> getNews() async {
+    var res = await get(Uri.parse(
+        "https://newsdata.io/api/1/news?country=iq&apikey=pub_32835067ee38ecbb2de743e3c7490a77d8207"));
+    List data = jsonDecode(res.body);
+    return data;
+  }
 
-  const NewsItem({
-    Key? key,
-    required this.title,
-    required this.description,
-    required this.imagePath,
-  }) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    getNews();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(
-            imagePath,
-            fit: BoxFit.cover,
-            height: 200,
-            width: double.infinity,
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  description,
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return FutureBuilder(
+      future: getNews(),
+      builder: (conext, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              title: Text("${snapshot.data![i]['title']}"),
+            );
+          },
+        );
+      },
     );
   }
 }
