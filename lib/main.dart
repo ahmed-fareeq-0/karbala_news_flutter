@@ -1,5 +1,6 @@
 import 'package:application_sus/screens/home-screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/screens.dart';
 
 void main() {
@@ -7,7 +8,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,13 +16,32 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Foodybite',
-      initialRoute: '/',
+      home: FutureBuilder(
+        future: checkLoginStatus(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return snapshot.data as Widget;
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      ),
       routes: {
-        '/': (context) => LoginScreen(),
         'ForgotPassword': (context) => ForgotPassword(),
         'CreateNewAccount': (context) => CreateNewAccount(),
         '/home': (context) => HomeScreen(),
       },
     );
+  }
+
+  Future<Widget> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+
+    if (token.isNotEmpty) {
+      return HomeScreen();
+    } else {
+      return LoginScreen();
+    }
   }
 }

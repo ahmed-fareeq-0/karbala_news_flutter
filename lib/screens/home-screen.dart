@@ -1,88 +1,67 @@
 import 'package:application_sus/pallete.dart';
+import 'package:application_sus/screens/news-screen.dart';
+import 'package:application_sus/screens/sections-screen.dart';
+import 'package:application_sus/drawer.dart';
+import 'package:application_sus/screens/settings-screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    SectionsScreen(),
+    SettingsScreen(),
+    NewsrScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'الرئيسية',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: kBlue,
-        elevation: 5,
-        iconTheme: IconThemeData(
-            color: Colors.white), // تغيير لون الأيقونة الخاصة بالرجوع
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: kBlue,
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 200,
-                // padding: EdgeInsets.only(top: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 70,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/photo_2023-11-09_23-27-59.jpg'),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "ahmed fareeq",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                    Text(
-                      "ahmed.fareeq.0@gmail.com",
-                      style: TextStyle(
-                        color: Colors.grey[200],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'الرئيسية',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ],
+          ),
+          backgroundColor: kBlue,
+          elevation: 5,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        endDrawer: Drawerf(),
+        body: _screens[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'الفئات',
             ),
-            ListTile(
-              title: Text('الاخبار'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'دردشة',
             ),
-            ListTile(
-              title: Text('الإعدادات'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'الرئيسية',
             ),
           ],
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'اخبار كربلاء ',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
-      ),
-    );
+        ));
   }
 }

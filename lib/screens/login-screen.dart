@@ -2,9 +2,11 @@
 
 import 'dart:convert';
 
+import 'package:application_sus/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../pallete.dart';
 import '../widgets/widgets.dart';
 
@@ -28,7 +30,15 @@ class _LoginScreenState extends State<LoginScreen> {
         var data = jsonDecode(response.body.toString());
         print(data['token']);
         print('Login successfully');
-        Navigator.pushNamed(context, '/home');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', data["token"]);
+        // Navigator.pushReplacement(context, '/home');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
       } else {
         print('failed');
       }
