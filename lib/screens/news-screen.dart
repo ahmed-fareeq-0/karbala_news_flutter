@@ -13,10 +13,20 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   Future<News> getNews() async {
-    var res = await get(Uri.parse(
+    // final String apiUrl = 'https://newsdata.io/api/1/news?country=iq&apikey=pub_32835067ee38ecbb2de743e3c7490a77d8207';
+    // final String country = 'us'; // يمكنك تغيير الدولة حسب احتياجاتك
+
+    final response = await get(Uri.parse(
         "https://newsdata.io/api/1/news?country=iq&apikey=pub_32835067ee38ecbb2de743e3c7490a77d8207"));
-    List data = jsonDecode(res.body);
-    return data;
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data =
+          json.decode(utf8.decode(response.bodyBytes));
+      print(data['results']);
+      return News.fromJson(data);
+    } else {
+      throw Exception('فشل في الاتصال بالخادم');
+    }
   }
 
   @override
@@ -29,20 +39,33 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getNews(),
-      builder: (conext, snapshot) {
+      builder: (context, AsyncSnapshot<News> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
           );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('حدث خطأ أثناء جلب الأخبار: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.results == null) {
+          return Center(
+            child: Text('لا توجد أخبار متاحة'),
+          );
+        } else {
+          // عرض قائمة الأخبار هنا
+          return ListView.builder(
+            itemCount: snapshot.data!.results!.length,
+            itemBuilder: (context, index) {
+              Results result = snapshot.data!.results![index];
+              return ListTile(
+                title: Text(result.title ?? ''),
+                subtitle: Text(result.description ?? ''),
+                // يمكنك تخصيص عرض الخبر كما تشاء
+              );
+            },
+          );
         }
-        return ListView.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, i) {
-            return ListTile(
-              title: Text("${snapshot.data![i]['title']}"),
-            );
-          },
-        );
       },
     );
   }
