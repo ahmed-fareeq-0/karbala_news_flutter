@@ -1,5 +1,0 @@
-// class user {
-//   int id;
-  
-  
-// }

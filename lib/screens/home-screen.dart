@@ -1,8 +1,6 @@
 import 'package:application_sus/pallete.dart';
-import 'package:application_sus/screens/news-screen.dart';
-import 'package:application_sus/screens/sections-screen.dart';
+import 'package:application_sus/screens/screens.dart';
 import 'package:application_sus/drawer.dart';
-import 'package:application_sus/screens/settings-screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,8 +12,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    SectionsScreen(),
-    SettingsScreen(),
+    SectionScreen(),
+    ChatScreen(),
     NewsScreen(),
   ];
 
