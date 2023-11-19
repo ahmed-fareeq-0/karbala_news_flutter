@@ -26,10 +26,6 @@ class ForgotPassword extends StatelessWidget {
                 color: kWhite,
               ),
             ),
-            title: Text(
-              'Forgot Password',
-              style: kBodyText,
-            ),
             centerTitle: true,
           ),
           body: Column(

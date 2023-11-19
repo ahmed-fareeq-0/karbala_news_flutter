@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  final List<String> _appBarTitles = ['الرئيسية', 'دردشة', 'تلاب'];
+  final List<String> _appBarTitles = ['الرئيسية', 'دردشة', ' عالمي'];
 
   final List<Widget> _screens = [
     NewsScreen(),
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.newspaper),
-              label: 'تلاب',
+              label: 'عالمي',
             ),
           ],
         ));

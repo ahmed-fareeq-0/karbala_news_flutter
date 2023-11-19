@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:ui';
+import 'package:application_sus/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart';
 import '../pallete.dart';
 import '../widgets/widgets.dart';
 
@@ -16,27 +15,6 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
-
-  void register(String email, password) async {
-    try {
-      Response response = await post(
-          Uri.parse('https://reqres.in/api/register'),
-          body: {'email': email, 'password': password});
-
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body.toString());
-        print(data);
-        print('register successfully');
-        Navigator.pushNamed(context, '/');
-      } else {
-        print('failed');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +217,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          register(_emailController.text.toString(),
+                          AuthService.register(_emailController.text.toString(),
                               _passwordController.text.toString());
                         },
                         child: Text(

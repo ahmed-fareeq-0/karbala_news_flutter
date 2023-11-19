@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:application_sus/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:application_sus/services/auth_service.dart';
 import '../pallete.dart';
 import '../widgets/widgets.dart';
 
@@ -16,37 +14,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var isLoding = true;
-  void login(String email, password) async {
-    isLoding = false;
-    setState(() {});
-    try {
-      Response response = await post(Uri.parse('https://reqres.in/api/login'),
-          body: {'email': email, 'password': password});
-
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        isLoding = true;
-        setState(() {});
-        var data = jsonDecode(response.body.toString());
-        print(data['token']);
-        print('Login successfully');
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', data["token"]);
-        // Navigator.pushReplacement(context, '/home');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
-        );
-      } else {
-        print('failed');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  String emailValue = '';
+  String passValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Center(
                         child: TextField(
                           controller: emailController,
+                          onChanged: (value) {
+                            setState(() {
+                              emailValue = value;
+                            });
+                          },
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Padding(
@@ -121,6 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Center(
                         child: TextField(
                           controller: passwordController,
+                          onChanged: (value) {
+                            setState(() {
+                              passValue = value;
+                            });
+                          },
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Padding(
@@ -160,8 +139,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          login(emailController.text.toString(),
-                              passwordController.text.toString());
+                          if (emailValue.isNotEmpty) {
+                            print('قيمة حقل البريد الإلكتروني: $emailValue');
+                            AuthService.login(
+                              emailController.text.toString(),
+                              passwordController.text.toString(),
+                              (result) {
+                                setState(() {
+                                  isLoding = result;
+                                });
+
+                                if (result) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeScreen(),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          } else {
+                            print('يرجى إدخال قيمة لحقل البريد الإلكتروني');
+                          }
                         },
                         child: isLoding
                             ? Text(
