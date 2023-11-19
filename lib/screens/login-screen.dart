@@ -15,8 +15,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  var isLoding = true;
   void login(String email, password) async {
+    isLoding = false;
+    setState(() {});
     try {
       Response response = await post(Uri.parse('https://reqres.in/api/login'),
           body: {'email': email, 'password': password});
@@ -24,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
       print(response.body);
 
       if (response.statusCode == 200) {
+        isLoding = true;
+        setState(() {});
         var data = jsonDecode(response.body.toString());
         print(data['token']);
         print('Login successfully');
@@ -155,15 +159,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: kBlue,
                     ),
                     child: TextButton(
-                      onPressed: () {
-                        login(emailController.text.toString(),
-                            passwordController.text.toString());
-                      },
-                      child: Text(
-                        "تسجيل دخول",
-                        style: kBodyText.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                        onPressed: () {
+                          login(emailController.text.toString(),
+                              passwordController.text.toString());
+                        },
+                        child: isLoding
+                            ? Text(
+                                "تسجيل دخول",
+                                style: kBodyText.copyWith(
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )),
                   ),
                   SizedBox(
                     height: 18,

@@ -1,1 +1,1 @@
-export '../services/news_service.dart';
+export 'news_service.dart';

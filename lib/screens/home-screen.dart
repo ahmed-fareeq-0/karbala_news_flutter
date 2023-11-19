@@ -10,11 +10,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  final List<String> _appBarTitles = ['الرئيسية', 'دردشة', 'تلاب'];
 
   final List<Widget> _screens = [
+    NewsScreen(),
     SectionScreen(),
     ChatScreen(),
-    NewsScreen(),
   ];
 
   @override
@@ -25,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'الرئيسية',
+                _appBarTitles[_currentIndex],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         endDrawer: Drawerf(),
         body: _screens[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
+          fixedColor: kBlue,
           backgroundColor: Colors.white,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -48,16 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.category),
-              label: 'الفئات',
+              icon: Icon(Icons.home),
+              label: 'الرئيسية',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.chat),
               label: 'دردشة',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'الرئيسية',
+              icon: Icon(Icons.newspaper),
+              label: 'تلاب',
             ),
           ],
         ));

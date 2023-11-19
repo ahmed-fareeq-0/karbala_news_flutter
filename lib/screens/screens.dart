@@ -4,3 +4,4 @@ export 'create-new-account.dart';
 export 'chat-screen.dart';
 export 'sections-screen.dart';
 export 'news-screen.dart';
+export 'news-details-screen.dart';

@@ -2,8 +2,9 @@ class News {
   String? status;
   int? totalResults;
   List<Results>? results;
+  String? nextPage;
 
-  News({this.status, this.totalResults, this.results});
+  News({this.status, this.totalResults, this.results, this.nextPage});
 
   News.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -14,6 +15,7 @@ class News {
         results!.add(new Results.fromJson(v));
       });
     }
+    nextPage = json['nextPage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class News {
     if (this.results != null) {
       data['results'] = this.results!.map((v) => v.toJson()).toList();
     }
+    data['nextPage'] = this.nextPage;
     return data;
   }
 }
@@ -32,8 +35,8 @@ class Results {
   String? title;
   String? link;
   List<String>? keywords;
-  Null? creator;
-  Null? videoUrl;
+  List<String>? creator;
+  Null videoUrl;
   String? description;
   String? content;
   String? pubDate;
@@ -65,8 +68,8 @@ class Results {
     articleId = json['article_id'];
     title = json['title'];
     link = json['link'];
-    keywords = json['keywords'].cast<String>();
-    creator = json['creator'];
+    keywords = (json['keywords'] as List?)?.cast<String>() ?? [];
+    creator = (json['creator'] as List?)?.cast<String>() ?? [];
     videoUrl = json['video_url'];
     description = json['description'];
     content = json['content'];
@@ -74,8 +77,8 @@ class Results {
     imageUrl = json['image_url'];
     sourceId = json['source_id'];
     sourcePriority = json['source_priority'];
-    country = json['country'].cast<String>();
-    category = json['category'].cast<String>();
+    country = (json['country'] as List?)?.cast<String>() ?? [];
+    category = (json['category'] as List?)?.cast<String>() ?? [];
     language = json['language'];
   }
 

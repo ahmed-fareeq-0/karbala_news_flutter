@@ -1,4 +1,5 @@
 import 'package:application_sus/screens/home-screen.dart';
+import 'package:application_sus/screens/sport-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/screens.dart';
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
         'ForgotPassword': (context) => ForgotPassword(),
         'CreateNewAccount': (context) => CreateNewAccount(),
         '/home': (context) => HomeScreen(),
+        '/newsDetails': (context) => NewsDetails(),
+        '/sportScreen': (context) => SportScreen(),
       },
     );
   }
